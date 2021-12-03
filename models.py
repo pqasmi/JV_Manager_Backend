@@ -6,12 +6,10 @@ import datetime
 DATABASE = SqliteDatabase('jv.sqlite')
 
 class Jv(Model):
-    name = CharField()
-    ownership = IntegerField()
-    sales = IntegerField()
-    cos = IntegerField()
-    management_turnover = True
-    created_at: DateTimeField(default=datetime.datetime.now)
+    name = CharField(null=True)
+    ownership = CharField(null=True)
+    sales = CharField(null=True)
+    created_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = DATABASE # use the db defined above as DATABASE

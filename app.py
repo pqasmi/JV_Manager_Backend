@@ -2,20 +2,20 @@ from flask import Flask, jsonify
 
 import models
 
+# import our package for handling cors
+from flask_cors import CORS
+
+from resources.jv import jv # import blueprint from resources.dogs
+
 DEBUG=True
 
 PORT=8000
 
 app = Flask(__name__)
 
-@app.route('/')
-def hello():
-    return 'Hello world!'
+CORS(jv, origins=['http://localhost:3000'], supports_credentials=True)
 
-@app.route('/test')
-def get_list():
-    return jsonify(['hello', 'hi', 'hey'])
-
+app.register_blueprint(jv, url_prefix='')
 
 if __name__ == '__main__':
     models.initialize()
