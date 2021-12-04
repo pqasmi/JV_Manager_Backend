@@ -10,8 +10,6 @@ from flask_login import LoginManager
 
 import os
 
-
-
 DEBUG=True
 
 PORT=8000
@@ -35,8 +33,8 @@ login_manager.init_app(app)
 CORS(jv, origins=['http://localhost:3000'], supports_credentials=True)
 CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
 
-app.register_blueprint(jv, url_prefix='')
-app.register_blueprint(users, url_prefix='')
+app.register_blueprint(jv, url_prefix='/jv')
+app.register_blueprint(users, url_prefix='/user')
 
 if __name__ == '__main__':
     models.initialize()
