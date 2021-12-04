@@ -56,7 +56,7 @@ def get_one_dogs(id):
     ), 200
 
 # PUT UPDATE ROUTE
-# PUT api/v1/dogs/<id>
+# PUT /<id>
 @jv.route('/<id>', methods=['PUT'])
 def update_jv(id):
     payload = request.get_json()
