@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 # 1. set up a secret/key for sessions
 # as demonstrated here: https://flask.palletsprojects.com/en/1.1.x/quickstart/#sessions
-app.secret_key = "ccaariieerrrr"
+app.secret_key = "1234567"
 
 # 2. instantiate the LoginManager to actually get a login_manager
 login_manager = LoginManager()

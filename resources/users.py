@@ -4,6 +4,8 @@ import models
 from flask import Blueprint, request, jsonify
 from flask_bcrypt import generate_password_hash
 
+from playhouse.shortcuts import model_to_dict
+
 # make this a blueprint
 users = Blueprint('users', 'users')
 
@@ -14,12 +16,34 @@ def test_user_resource():
 
 @users.route('/register', methods=['POST'])
 def register():
-    # this interm step analogous to making sure we can log req.body in express
-    # note: we had to send JSON from postman (choose raw, select JSON from the drop menu, type a perfect JSON object with double quotes around keys)   
-    print(request.get_json())
-    return "check terminal"
-    # since emails are case insensitive in the world
-    # payload['email'] = payload['email'].lower()
-    # #might as well do the same with the username
-    # payload['username'] = payload['username'].lower()
-   
+    payload = request.get_json()
+    payload['email'] = payload['email'].lower()
+    payload['username'] = payload['username'].lower()
+    
+    try:
+        models.User.get(models.User.email == payload['email'])
+        return jsonify(
+            data={},
+            message="A user with that email already exists",
+            status=401
+        ), 401 
+    except models.DoesNotExist: 
+        pw_hash = generate_password_hash(payload['password'])
+        created_user = models.User.create(
+            username=payload['username'],
+            email=payload['email'],
+            password=pw_hash
+        )
+
+        created_user_dict = model_to_dict(created_user)
+
+        # we can't jsonify the password (generate_password_hash gives us something in type "bytes" which is unserializable)
+        # plus we shouldn't be send back the encrypted pw anyways
+        # print(type(created_user_dict['password']))
+        # so let's just get rid of it
+        created_user_dict.pop('password')
+        return jsonify(
+            data=created_user_dict,
+            message="Successfully registered user",
+            status=201
+        ), 201
