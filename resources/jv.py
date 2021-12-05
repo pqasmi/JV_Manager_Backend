@@ -13,8 +13,6 @@ jv = Blueprint('jv', 'jv')
 @jv.route('/', methods=['GET'])
 def jv_index():
     result = models.Jv.select()
-    print("")
-    print('result of jv select query')
      # or use a list comprehension
     jv_dicts = [model_to_dict(jv) for jv in result]   
     return jsonify({
@@ -28,15 +26,13 @@ def jv_index():
 def create_jv():
     # .get_json() attached to the request will extract JSON from the request body
     payload = request.get_json() # this is like req.body in express!!!
-
     new_jv = models.Jv.create(name=payload['name'], ownership=payload['ownership'], sales=payload['sales'])
     print(new_jv)
-    
     jv_dict = model_to_dict(new_jv)
     
     return jsonify(
         data=jv_dict,
-        message='Successfully created dog!',
+        message='Successfully created JV!',
         status=201
     ), 201
 

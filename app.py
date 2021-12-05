@@ -30,8 +30,9 @@ login_manager = LoginManager()
 # 3. actually connect the app with the login_manager
 login_manager.init_app(app)
 
-CORS(jv, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(app, resources={r"/jv*": {"origins":['http://localhost:3000']}}, supports_credentials=True)
 CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
+
 
 app.register_blueprint(jv, url_prefix='/jv')
 app.register_blueprint(users, url_prefix='/user')
