@@ -6,9 +6,11 @@ from flask_login import UserMixin
 DATABASE = SqliteDatabase('jv.sqlite')
 
 class Jv(Model):
-    name = CharField(null=True)
-    ownership = CharField(null=True)
-    sales = CharField(null=True)
+    name = CharField()
+    logo = CharField()
+    location = CharField()
+    ownership = IntegerField()
+    sales = IntegerField()
     created_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:

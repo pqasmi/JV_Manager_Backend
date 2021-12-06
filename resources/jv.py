@@ -26,7 +26,7 @@ def jv_index():
 def create_jv():
     # .get_json() attached to the request will extract JSON from the request body
     payload = request.get_json() # this is like req.body in express!!!
-    new_jv = models.Jv.create(name=payload['name'], ownership=payload['ownership'], sales=payload['sales'])
+    new_jv = models.Jv.create(name=payload['name'], logo=payload['logo'], location=payload['location'], ownership=payload['ownership'], sales=payload['sales'])
     print(new_jv)
     jv_dict = model_to_dict(new_jv)
     
