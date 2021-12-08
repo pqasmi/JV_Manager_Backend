@@ -5,7 +5,17 @@ from flask_login import UserMixin
 
 DATABASE = SqliteDatabase('jv.sqlite')
 
+class User(UserMixin, Model):
+    username = CharField(unique=True)
+    email = CharField(unique=True)
+    password = CharField()
+
+    class Meta:
+        database = DATABASE # use the db defined above as DATABASE
+
+
 class Jv(Model):
+    preparer = ForeignKeyField(User, backref='jv')
     name = CharField()
     logo = CharField()
     location = CharField()
@@ -17,13 +27,6 @@ class Jv(Model):
         database = DATABASE # use the db defined above as DATABASE
 
 
-class User(UserMixin, Model):
-    username = CharField(unique=True)
-    email = CharField(unique=True)
-    password = CharField()
-
-    class Meta:
-        database = DATABASE # use the db defined above as DATABASE
 
 def initialize(): 
     DATABASE.connect() 

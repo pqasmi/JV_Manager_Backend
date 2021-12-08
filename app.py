@@ -30,12 +30,34 @@ login_manager = LoginManager()
 # 3. actually connect the app with the login_manager
 login_manager.init_app(app)
 
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        print("loading the following user")
+        user = models.User.get_by_id(user_id)
+        return user
+    except models.DoesNotExist:
+        return None 
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return jsonify(
+        data={
+            'error': 'User not logged in'
+        },
+        message="You must be logged in to access that resource",
+        status=401
+    ), 401
+
+
+
+
 CORS(app, resources={r"/jv*": {"origins":['http://localhost:3000']}}, supports_credentials=True)
 CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
 
 
 app.register_blueprint(jv, url_prefix='/jv')
-app.register_blueprint(users, url_prefix='/user')
+app.register_blueprint(users, url_prefix='/users')
 
 if __name__ == '__main__':
     models.initialize()

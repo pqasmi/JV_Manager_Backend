@@ -1,6 +1,7 @@
 import models
 from flask import Blueprint, request, jsonify
 from playhouse.shortcuts import model_to_dict
+from flask_login import current_user, login_required
 
 # creating our blueprint
 # first argument is the blueprint's name
@@ -11,24 +12,32 @@ from playhouse.shortcuts import model_to_dict
 jv = Blueprint('jv', 'jv')
 
 @jv.route('/', methods=['GET'])
+@login_required
 def jv_index():
     result = models.Jv.select()
      # or use a list comprehension
-    jv_dicts = [model_to_dict(jv) for jv in result]   
+    current_user_jv_dicts = [model_to_dict(jv) for jv in current_user.jv]
+
+    for jv_dict in current_user_jv_dicts:
+        jv_dict['preparer'].pop('password')
+
     return jsonify({
-        'data': jv_dicts,
-        'message': f"Successfully found {len(jv_dicts)} JV",
+        'data': current_user_jv_dicts,
+        'message': f"Successfully found {len(current_user_jv_dicts)} JV",
         'status': 200
     }), 200
 
 
 @jv.route('/', methods=['POST'])
+@login_required
 def create_jv():
     # .get_json() attached to the request will extract JSON from the request body
     payload = request.get_json() # this is like req.body in express!!!
-    new_jv = models.Jv.create(name=payload['name'], logo=payload['logo'], location=payload['location'], ownership=payload['ownership'], sales=payload['sales'])
+    new_jv = models.Jv.create(name=payload['name'], logo=payload['logo'], location=payload['location'], ownership=payload['ownership'], sales=payload['sales'], preparer=current_user.id)
+
     print(new_jv)
     jv_dict = model_to_dict(new_jv)
+    jv_dict['preparer'].pop('password')
     
     return jsonify(
         data=jv_dict,
@@ -54,6 +63,7 @@ def get_one_dogs(id):
 # PUT UPDATE ROUTE
 # PUT /<id>
 @jv.route('/<id>', methods=['PUT'])
+@login_required
 def update_jv(id):
     payload = request.get_json()
     models.Jv.update(**payload).where(models.Jv.id == id).execute()
@@ -66,6 +76,7 @@ def update_jv(id):
 # DELETE/ DESTROY
 # DELETE api/v1/dogs/<id>
 @jv.route('/<id>', methods=['DELETE'])
+@login_required
 def delete_jv(id):
     # we are trying to delete the dog with the id that comes through as a param
     # check here for how: http://docs.peewee-orm.com/en/latest/peewee/querying.html#deleting-records
