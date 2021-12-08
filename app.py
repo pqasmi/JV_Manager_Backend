@@ -50,10 +50,8 @@ def unauthorized():
     ), 401
 
 
-
-
-CORS(app, resources={r"/jv*": {"origins":['http://localhost:3000']}}, supports_credentials=True)
-CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(app, resources={r"/jv*": {"origins":['http://localhost:3000']}}, supports_credentials=False)
+CORS(users, origins=['http://localhost:3000'], supports_credentials=False)
 
 
 app.register_blueprint(jv, url_prefix='/jv')
