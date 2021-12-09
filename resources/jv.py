@@ -32,7 +32,7 @@ def jv_index():
 @login_required
 def create_jv():
     # .get_json() attached to the request will extract JSON from the request body
-    payload = request.get_json() # this is like req.body in express!!!
+    payload = request.get_json() # this is like req.body in express
     new_jv = models.Jv.create(name=payload['name'], logo=payload['logo'], location=payload['location'], ownership=payload['ownership'], sales=payload['sales'], preparer=current_user.id)
 
     print(new_jv)

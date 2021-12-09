@@ -128,6 +128,8 @@ def get_logged_in_user():
             status=200
         ), 200
 
+
+
 @users.route('/logout', methods=['GET'])
 def logout():
     # following the logout here: https://flask-login.readthedocs.io/en/latest/#login-example
