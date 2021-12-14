@@ -55,7 +55,8 @@ def unauthorized():
 
 
 CORS(app, resources={r"/jv*": {"origins":['http://localhost:3000', 'https://jv-manager-frontend.herokuapp.com']}}, supports_credentials=True)
-CORS(users, origins=['http://localhost:3000', 'https://jv-manager-frontend.herokuapp.com'], supports_credentials=True)
+
+CORS(app, resources={r"/users*": { "origins":['http://localhost:3000', 'https://jv-manager-frontend.herokuapp.com']}}, supports_credentials=True)
 
 
 app.register_blueprint(jv, url_prefix='/jv')
