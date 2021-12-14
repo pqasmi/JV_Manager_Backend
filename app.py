@@ -27,6 +27,8 @@ app = Flask(__name__)
 # 1. set up a secret/key for sessions
 # as demonstrated here: https://flask.palletsprojects.com/en/1.1.x/quickstart/#sessions
 app.secret_key = os.environ.get("FLASK_APP_SECRET")
+app.config['SESSION_COOKIE_SAMESITE'] = "None"
+app.config['SESSION_COOKIE_SECURE'] = True
 
 # 2. instantiate the LoginManager to actually get a login_manager
 login_manager = LoginManager()
