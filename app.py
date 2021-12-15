@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, after_this_request
+from flask import Flask, jsonify, after_this_request, session
 
 import models
 
@@ -28,6 +28,7 @@ app = Flask(__name__)
 # as demonstrated here: https://flask.palletsprojects.com/en/1.1.x/quickstart/#sessions
 app.secret_key = os.environ.get("FLASK_APP_SECRET")
 
+
 app.config['SESSION_COOKIE_SAMESITE'] = "None"
 app.config['SESSION_COOKIE_SECURE'] = True
 
@@ -42,7 +43,9 @@ def load_user(user_id):
     try:
         print("loading the following user")
         user = models.User.get_by_id(user_id)
+        print(f"{user.username}")
         return user
+        
     except models.DoesNotExist:
         return None 
 
@@ -67,6 +70,7 @@ app.register_blueprint(users, url_prefix='/users')
 
 @app.before_request # use this decorator to cause a function to run before reqs
 def before_request():
+    print(session)
 
     """Connect to the db before each request"""
     print("you should see this before each request") # optional -- to illustrate that this code runs before each request -- similar to custom middleware in express.  you could also set it up for specific blueprints only.
@@ -74,6 +78,7 @@ def before_request():
 
     @after_this_request # use this decorator to Executes a function after this request
     def after_request(response):
+        print(session)
         """Close the db connetion after each request"""
         print("you should see this after each request") # optional -- to illustrate that this code runs after each request
         models.DATABASE.close()
